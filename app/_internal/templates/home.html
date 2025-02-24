@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Yıldırım Riski Hesaplama Uygulaması</title>
+  <style>
+    /* Genel stil */
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      background-color: #f4f4f4;
+    }
+    /* Header stili: Logo ve başlık için flex düzeni */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(45deg, #779dc3, #845bcb);
+      color: #fff;
+      padding: 15px;
+      position: relative;
+      overflow: hidden;
+    }
+    /* Sol üstteki logo */
+    .logo {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      height: 75px;
+      width: auto;
+
+    }
+    .çeto {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      height: 140px;
+      width: auto;
+
+    }
+
+    nav {
+      background: #333;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      padding: 10px;
+    }
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 8px 16px;
+      transition: background-color 0.3s, transform 0.3s;
+    }
+    nav a:hover {
+      background-color: #555;
+      transform: scale(1.05);
+    }
+    /* Container stili ve fade-in animasyonu */
+    .container {
+      margin: 20px auto;
+      width: 1250px;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      animation: fadeIn 1s ease-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .content {
+      margin-top: 15px;
+    }
+    h1, h2 {
+      text-align: center;
+    }
+    .form-group {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      width: 180px;
+      margin-right: 10px;
+    }
+    .form-group input, .form-group select {
+      flex: 1;
+      padding: 5px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+    table, th, td {
+      border: 1px solid #ddd;
+    }
+    th, td {
+      padding: 8px;
+      text-align: center;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <!-- Sol üstte logo (logo.png dosyasının yolunu kontrol ediniz) -->
+    <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo">
+    <img src="{{ url_for('static', filename='çeto.png') }}" alt="çeto" class="çeto">
+    <h1>Yıldırım Riski Hesaplama Uygulaması</h1>
+  </header>
+
+  <nav>
+    <a href="{{ url_for('region_parameters') }}">Çevre ve Yapı Karakteristikleri</a>
+    <a href="{{ url_for('power_line') }}">Güç Hattı Karakteristikleri</a>
+    <a href="{{ url_for('TLC') }}">Telekominikasyon Hattı Karakteristikleri</a>
+    <a href="{{ url_for('bölge_konum') }}">Koruma Bölgesi Karakteristikleri</a>
+    <a href="{{ url_for('rapor') }}">Rapor Bilgileri</a>
+    <a href="{{ url_for('computed_values') }}">Sonuçlar</a>
+  </nav>
+  
+  <div class="container">
+    {% block content %}
+    <h1>Yıldırım Riski Hesaplama Uygulaması</h1>
+    {% endblock %}
+  </div>
+</body>
+</html>

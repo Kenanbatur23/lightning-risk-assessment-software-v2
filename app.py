@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, session, redirect, url_for,make_response
 import pdfkit
 import base64
-#wkhtmltopdf
+#wkhtmltopdf indirilmesi gerekli
 
 import math
 
