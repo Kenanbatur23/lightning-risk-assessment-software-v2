@@ -991,7 +991,7 @@ def download_pdf():
     
     response = make_response(pdf)
     response.headers["Content-Type"] = "application/pdf"
-    response.headers["Content-Disposition"] = "attachment; filename=Lightning Risk Assesment Report.pdf"
+    response.headers["Content-Disposition"] = f"attachment; filename={musteri}-{obje} Risk Analiz Raporu.pdf"
     
     return response
 
