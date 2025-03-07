@@ -40,7 +40,7 @@
       <select name="dayanım_gerilimi_TLC" id="dayanım_gerilimi_TLC" required>
         <option value="" disabled {% if not dayanım_gerilimi_TLC %}selected{% endif %}>Seçiniz</option>
         <option value="Yeterli Değil" {% if dayanım_gerilimi_güç == 'Yeterli Değil' %}selected{% endif %}>Yeterli Değil</option>
-        <option value="1 kV" {% if dayanım_gerilimi_TLC == '1kV' %}selected{% endif %}>1kV</option>
+        <option value="1 kV" {% if dayanım_gerilimi_TLC == '1 kV' %}selected{% endif %}>1 kV</option>
         <option value="1.5 kV" {% if dayanım_gerilimi_TLC == '1.5 kV' %}selected{% endif %}>1.5 kV</option>
         <option value="2.5 kV" {% if dayanım_gerilimi_TLC == '2.5 kV' %}selected{% endif %}>2.5 kV</option>
         <option value="4 kV" {% if dayanım_gerilimi_TLC == '4 kV' %}selected{% endif %}>4 kV</option>

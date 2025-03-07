@@ -953,7 +953,7 @@ def download_pdf():
     R_TOPLAM = R_A + R_B + R_C + R_M + R_U + R_V + R_W + R_Z
     R_TOPLAM = round(R_TOPLAM, 2)
     
-    if R_TOPLAM >= 1e-5:
+    if R_TOPLAM >= 1:
         sonuç = "R1 > RT olduğu görülmektedir. Sonuç olarak KORUMA GEREKLİDİR."
     else:
         sonuç = "R1 < RT olduğu görülmektedir. Sonuç olarak KORUMA GEREKLİ DEĞİLDİR."
