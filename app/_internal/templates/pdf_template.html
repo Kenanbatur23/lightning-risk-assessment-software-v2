@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Yıldırım Risk Analiz Raporu</title>
+  <style>
+    @page {
+      margin: 20mm;
+      /* wkhtmltopdf, sayfa numaralarını header/footer seçenekleri ile ekleyebilir.
+         Bu örnekte, basit CSS footer kullanılmıştır. */
+    }
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      color: #2C3E50;
+      background: #fff;
+    }
+    .page {
+      position: relative;
+      padding: 20mm;
+      page-break-after: always;
+      min-height: 260mm;
+    }
+    .uzman-aciklama {
+    white-space: pre-wrap;      /* Yeni satır karakterlerini korur */
+    word-wrap: break-word;      /* Uzun kelimeleri kırar */
+    overflow-wrap: break-word;  /* Aynı işlevi görür */
+    border: 1px solid #ccc;
+    padding: 10px;
+    background-color: #fafafa;
+    margin-top: 10px;
+    }
+    .cover {
+      text-align: center;
+      padding-top: 150px;
+    }
+    h1, h2, h3 {
+      margin: 0 0 10px 0;
+      color: #34495E;
+    }
+    p, li {
+      line-height: 1.6;
+      font-size: 14px;
+    }
+    .content {
+      margin-bottom: 20px;
+    }
+    .section {
+      margin-bottom: 15px;
+    }
+    .table-of-contents {
+      background-color: #ecf0f1;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+    .footer {
+      position: absolute;
+      bottom: 15mm;
+      right: 15mm;
+      font-size: 10px;
+      color: #7f8c8d;
+    }
+  </style>
+</head>
+<body>
+  <!-- Kapak Sayfası -->
+
+  <div class="page cover">
+    <img src="data:image/png;base64,{{ logo_base64 }}" alt="Logo" style="max-width:200px;">
+    <br><br><br>
+    <h1>Yıldırım Risk Analiz Raporu</h1>
+    <br><br><br><br>
+    <p>Tarih: {{tarih}}</p>
+    <p>Proje No: {{proje_no}}</p>
+    <p>Proje / Obje Tanımı: {{obje}}</p>
+    <p>Risk Yönetimi</p>
+    <p>Uluslararası Standart: IEC 62305-2</p>
+    <p>Ülkeye Özgü Ekler: TS 62305-2</p>
+    <p>Müşteri: {{musteri}}</p>
+    <p>Risk Analizi Uzmanı: {{uzman_isim}}</p>
+    <div class="footer">Sayfa 1</div>
+  </div>
+
+  <!-- KISALTMA SAYFASI -->
+<div class="page">
+    <div class="content">
+      <h2>Kısaltmalar</h2>
+      <p>
+        <strong>CD</strong> : Konum Faktörü<br>
+        <strong>EB</strong> : Yıldırım eşpotansiyel dengelemesi<br>
+        <strong>H</strong> : Yapının yüksekliği<br>
+        <strong>HP</strong> : Yapının en yüksek noktası<br>
+        <strong>KS1</strong> : Yapının dış manyetik koruma (harici koruma) etkinliği ile ilgili faktör<br>
+        <strong>KS2</strong> : Yapının dış koruma etkinliği ile ilgili faktör (iç koruma)<br>
+        <strong>L1</strong> : İnsan hayatı kaybı<br>
+        <strong>L</strong> : Yapının uzunluğu<br>
+        <strong>LEMP</strong> : Yıldırım elektromanyetik darbe<br>
+        <strong>LP</strong> : Yıldırım koruması (LPS ve LEMP koruma önlemleri bütünlüğü)<br>
+        <strong>LPL</strong> : Yıldırım koruma seviyesi<br>
+        <strong>LPS</strong> : Yıldırım koruma sistemi<br>
+        <strong>LPZ</strong> : Yıldırım koruma bölgesi (yıldırım elektromanyetik ortamının tanımlandığı bölge)<br>
+        <strong>ND</strong> : Yıldırım düşmesi sonucu yapıda tehlikeli olay oluşma sıklığı<br>
+        <strong>NG</strong> : Toprak / yıldırım darbe yoğunluğu<br>
+        <strong>PB</strong> : Yıldırım düşmesi sonucu yapıda fiziksel hasar oluşma olasılığı<br>
+        <strong>PEB</strong> : Yıldırım eşpotansiyel dengelemesi<br>
+        <strong>PSPD</strong> : Koordineli aşırı gerilim koruyucu sistem<br>
+        <strong>R</strong> : Risk<br>
+        <strong>R1</strong> : Yapıda insan hayatı kaybı riski<br>
+        <strong>RA</strong> : Risk bileşeni (canlılara zarar – yapıya yıldırım düşmesi)<br>
+        <strong>RB</strong> : Risk bileşeni (fiziksel hasar – yapıya yıldırım düşmesi)<br>
+        <strong>RC</strong> : Risk bileşeni (dahili sistemlerin arızalanması – yapıya yıldırım düşmesi)<br>
+        <strong>RM</strong> : Risk bileşeni (dahili sistemlerin arızalanması – yapıya yakın yıldırım düşmesi)<br>
+        <strong>RU</strong> : Risk bileşeni (canlılara zarar – bağlı bir hattın yıldırım alması)<br>
+        <strong>RV</strong> : Risk bileşeni (fiziksel hasar – bağlı bir hattın yıldırım alması)<br>
+        <strong>RW</strong> : Risk bileşeni (dahili sistemlerin arızalanması – bağlı bir hatta yıldırım düşmesi)<br>
+        <strong>RZ</strong> : Risk bileşeni (dahili sistemlerin arızalanması – bağlı hattın yakınına yıldırım düşmesi)<br>
+        <strong>RT</strong> : Tolerans riski (yapının korunmasında tolere edilebilecek en yüksek risk değeri)<br>
+        <strong>rf</strong> : Yapıda yangın riskini dikkate alan azaltma faktörü<br>
+        <strong>rp</strong> : Yangın sonuçlarını azaltmak için alınan önlemleri dikkate alan azaltma faktörü<br>
+        <strong>SM</strong> : Yıllık tasarruf<br>
+        <strong>SPD</strong> : Aşırı gerilim koruyucu cihaz<br>
+        <strong>SPM</strong> : LEMP koruma önlemleri (elektrik/elektronik sistem arızalarını azaltma)<br>
+        <strong>W</strong> : Yapının genişliği<br>
+      </p>
+    </div>
+    <div class="footer">Sayfa 2</div>
+  </div>
+  
+
+
+  <!-- Risk ve Hasar Kaynakları -->
+<!-- 3. RISK VE HASAR KAYNAKLARI SAYFASI -->
+<div class="page">
+    <div class="content">
+      <h2>3. Risk ve Hasar Kaynakları</h2>
+      <p>
+        Yıldırım çarpması sonucu oluşabilecek hasarları önlemek için, korunacak yapılara özgü belirli
+        koruma önlemlerinin alınması gereklidir. TS 62305-2 standartında tanımlanan risk
+        yönetimi, bir yapının yıldırım koruma gereksinimlerini belirlemeye olanak tanıyan bir risk
+        analizi içermektedir. Risk yönetiminin amacı, koruma önlemleri alarak riski kabul edilebilir
+        bir seviyeye indirmektir.
+      </p>
+      <p>
+        Mevcut riski belirlemek için, ilgili yapı herhangi bir koruma önlemi olmaksızın (mevcut durum)
+        değerlendirilmelidir. Yapıya veya bağlı hatlara doğrudan/dolaylı yıldırım çarpması sonucu
+        oluşabilecek riskler “R” olarak adlandırılır. Risk, olası yıllık kaybı tanımlar. Bir yapıda
+        değerlendirilmesi gereken riskler şunlar olabilir:
+      </p>
+      <ul>
+        <li><strong>R1:</strong> İnsan hayatı kaybı riski</li>
+        <li><strong>R2:</strong> Kamu hizmetlerinin kaybı riski</li>
+        <li><strong>R3:</strong> Kültürel miras kaybı riski</li>
+        <li><strong>R4:</strong> Ekonomik değer kaybı riski</li>
+      </ul>
+      <p>
+        Her risk, sayısal bir değerle tanımlanan tolerans riski (RT) ile karşılaştırılır. Tolerans risk
+        seviyesine ulaşabilmek için, teknik ve ekonomik açıdan uygun koruma önlemleri (ör. 
+        IEC 62305-3’ye göre harici yıldırım koruması, IEC 62305-4’ye göre SPD önlemleri) 
+        tanımlanır.
+      </p>
+      <p>
+        Riskin detayını daha net belirleyebilmek için, risk bileşenleri ayrıntılı olarak değerlendirilir.
+        Her risk, aşağıdaki risk bileşenlerinin toplamından oluşur:
+      </p>
+      <p>
+        <strong>R1 = RA + RB + RC + RM + RU + RV + RW + RZ</strong><br>
+        <strong>R2 = RB + RC + RM + RV + RW + RZ</strong><br>
+        <strong>R3 = RB + RV</strong><br>
+        <strong>R4 = RA + RB + RC + RM + RU + RV + RW + RZ</strong>
+      </p>
+      <p>
+        Her risk bileşeni, olası bir hasarı (insan hayatı kaybı, hizmet kaybı, kültürel miras kaybı veya
+        ekonomik kayıp) temsil eder. Yıldırım kaynaklı zararlar, oluşma sebeplerine (S1, S2, S3, S4) göre
+        sınıflandırılır ve bu sınıflara bağlı risk bileşenleri belirlenir.
+      </p>
+      <p>
+        Yıldırım Koruma Sistemi (LPS) ve gerekli LEMP koruma önlemleri, bu risk bileşenlerini
+        minimize edecek şekilde tasarlanır. Böylece, yapının özelliklerine ve kullanım amacına uygun,
+        ekonomik açıdan mantıklı bir koruma çözümü elde edilir.Bu rapor kapsamında ise en önemli Parametre olan R1 (İnsan hayatı kaybı riski) üzerinde durulmuştur.
+      </p>
+    </div>
+    <!-- Sağ alt köşede sayfa numarası -->
+    <div class="footer">Sayfa 3</div>
+  </div>
+  
+  <!-- Proje Verileri -->
+  <!-- 4. PROJE VERİLERİ SAYFASI -->
+<!-- 4. PROJE VERİLERİ SAYFASI -->
+<div class="page">
+    <div class="content">
+      <h2>Proje Verileri ve Sonuç</h2>
+      <!-- 4.1 Dikkate Alınan Riskler -->
+      <h3>Dikkate Alınan Riskler</h3>
+      <p>
+        Yapının türü ve kullanım amacı dikkate alındığında {{obje}},
+        aşağıdaki risk seçilmiş ve değerlendirilmiştir:
+      </p>
+      <ul>
+        <li><strong>Risk R1:</strong> İnsan hayatı kaybı riski</li>
+      </ul>
+      <p>
+        Bu risk için ilgili tolerans risk değeri (R<sub>T</sub>) aşağıdaki gibi tanımlanmıştır:
+      </p>
+      <ul>
+        <li>R<sub>T</sub> (R1) = 1,00E-05</li>
+      </ul>
+  
+      <!-- Tablo: Risk Bileşenleri ve R1 Hesaplaması -->
+      <h3>R1 Risk Bileşenleri ve Hesaplama Tablosu</h3>
+      <p>
+        Aşağıdaki tabloda, R1’i oluşturan risk bileşenleri (RA, RB, RC, RM, RU, RV, RW, RZ) için
+        örnek değerler yer almaktadır. Her bileşenin katkısı toplanarak R1 değeri elde edilir ve
+        bu değer, tanımlanmış tolerans riski R<sub>T</sub> ile karşılaştırılır.
+      </p>
+  
+      <table border="1" cellpadding="6" cellspacing="0" style="border-collapse: collapse; width: 100%; text-align: left;">
+        <thead style="background-color: #f0f0f0;">
+          <tr>
+            <th style="width: 50%;">Risk Bileşeni</th>
+            <th style="width: 50%;">Değer x (1E5)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>RA</td>
+            <td>{{R_A}}</td>
+          </tr>
+          <tr>
+            <td>RB</td>
+            <td>{{R_B}}</td>
+          </tr>
+          <tr>
+            <td>RC</td>
+            <td>{{R_C}}</td>
+          </tr>
+          <tr>
+            <td>RM</td>
+            <td>{{R_M}}</td>
+          </tr>
+          <tr>
+            <td>RU</td>
+            <td>{{R_U}}</td>
+          </tr>
+          <tr>
+            <td>RV</td>
+            <td>{{R_V}}</td>
+          </tr>
+          <tr>
+            <td>RW</td>
+            <td>{{R_W}}</td>
+          </tr>
+          <tr>
+            <td>RZ</td>
+            <td>{{R_Z}}</td>
+          </tr>
+          <tr style="font-weight: bold;">
+            <td>Toplam R1</td>
+            <td>{{R_TOPLAM}}</td>
+          </tr>
+        </tbody>
+      </table>
+  
+      <p style="margin-top: 1px;">
+        Hesaplanan R1 = {{R_TOPLAM}}E-5 ve tanımlı R<sub>T</sub> = 1,00E-05 değerleri dikkate alındığında,
+        {{sonuç}}
+      </p>
+      <!-- Uzman Yorumu Kutusu -->
+      <h3>Uzman Yorumu</h3>
+      <div style="border: 1px solid #ccc; padding: 10px; background-color: #fafafa; margin-top: 1px;">
+        <div class="uzman-aciklama">
+          <p>
+            {{ uzman_aciklama }}
+          </p>
+        </div>
+      </div>
+  
+    </div>
+    <!-- Sağ alt köşede sayfa numarası -->
+    <div class="footer">Sayfa 4</div>
+  </div>
+  
+
+  
+
+
+<!-- 10. GENEL BİLGİLER SAYFASI -->
+<div class="page">
+    <div class="content">
+      <h2>10. Genel Bilgiler</h2>
+      <p>
+        Yıldırım koruma sistemlerinin tasarımı ve uygulanmasında kullanılan bileşenler,
+        IEC 62561-x standart serisinde tanımlanan mekanik ve elektriksel gereksinimleri
+        karşılamalıdır. Bu standart serisi, farklı bölümler halinde aşağıdaki gibi sınıflandırılır:
+      </p>
+      <ul>
+        <li>IEC 62561-1:2012 – Bağlantı elemanlarına ilişkin gereksinimler</li>
+        <li>IEC 62561-2:2012 – İletkenler ve topraklayıcılar için gereksinimler</li>
+        <li>IEC 62561-3:2012 – İzole kıvılcım boşluklarına ilişkin gereksinimler</li>
+        <li>IEC 62561-4:2010 – İletken sabitleme elemanları için gereksinimler</li>
+        <li>IEC 62561-5:2011 – Topraklama elektrodu denetim kutuları ve elektrot sızdırmazlıkları için gereksinimler</li>
+      </ul>
+  
+      <h3>10.1 Harici Yıldırım Koruma Sisteminin Bileşenleri</h3>
+      <p>
+        Harici yıldırım koruma sisteminin (LPS) kurulmasında kullanılan bileşenler, mekanik ve
+        elektriksel özellikler bakımından IEC 62561-x serisinde belirtilen kriterleri sağlamalıdır.
+        Böylece, sistem hem güvenilir hem de uzun ömürlü olur.
+      </p>
+  
+      <h4>10.1.1 IEC 62561-1:2012 – Bağlantı Elemanları</h4>
+      <p>
+        Bağlantı elemanları (örneğin kelepçeler), IEC 62561-1’de tanımlanan mekanik ve
+        elektriksel gereksinimlere uymalıdır. Kurulum noktasındaki yıldırım akımı yüküne göre
+        H (100 kA) veya N (50 kA) sınıfında kelepçeler seçilmeli ve üretici tarafından bu
+        sınıflandırmanın uygunluğu kanıtlanmalıdır.
+      </p>
+  
+      <h4>10.1.2 IEC 62561-2:2012 – İletkenler ve Topraklayıcılar</h4>
+      <p>
+        Bu standart, hava terminali ve iniş iletkenleri ile topraklayıcıların mekanik ve elektriksel
+        gereksinimlerini tanımlar. Malzeme, kesit, minimum boyutlar, çekme dayanımı ve
+        korozyon koruması gibi kriterler bu kapsamda değerlendirilmelidir.
+      </p>
+  
+      <h4>10.1.3 IEC 62561-3:2012 – İzole Kıvılcım Boşlukları</h4>
+      <p>
+        İzole kıvılcım boşlukları, topraklama sistemini galvanik olarak ayırmak amacıyla
+        kullanılabilir. IEC 62561-3, bu elemanların doğru kurulum koşullarında güvenli
+        ve kalıcı bir şekilde çalışabilmesi için gereken kriterleri tanımlar.
+      </p>
+  
+      <h4>10.1.4 IEC 62561-4:2010 – İletken Sabitleme Elemanları</h4>
+      <p>
+        Hava terminali ve iniş iletkenlerinin sabitlenmesinde kullanılacak metal veya metal dışı
+        elemanların mekanik ve elektriksel özellikleri IEC 62561-4’te yer alır. Bu standart,
+        bağlantı noktalarının dayanıklılığını ve güvenliğini garanti altına alır.
+      </p>
+  
+      <h4>10.1.5 IEC 62561-5:2011 – Topraklama Elektrodu Denetim Kutuları ve Elektrot Sızdırmazlıkları</h4>
+      <p>
+        Topraklama elektrodu denetim kutuları ve sızdırmazlık elemanları, kurulum
+        koşullarında güvenli ve çevreye karşı korunaklı olmalıdır. IEC 62561-5, bu ürünlerin
+        basınç dayanımı, sızdırmazlık ve benzeri testleri için gereksinimleri belirler.
+      </p>
+    </div>
+    <!-- Sağ alt köşede sayfa numarası -->
+    <div class="footer">Sayfa 5</div>
+  </div>
+
+<div class="page">
+    <div class="content">
+      <h2>Tanımlar</h2>
+  
+      <h3>Koordineli SPD Sistemi</h3>
+      <p>
+        Doğru seçilmiş, koordineli ve kurulmuş SPD’lerin (Aşırı Gerilim Koruyucu Cihazlar) 
+        oluşturduğu sistem; iç ve dış yıldırım etkileri ile şebeke kaynaklı ani aşırı gerilimlerden 
+        doğabilecek arızaları azaltmayı hedefler. Bu sistem, LPZ (Yıldırım Koruma Bölgeleri) 
+        içerisinde çeşitli seviyelerde koruma sağlar.
+      </p>
+  
+      <h3>LEMP (Yıldırım Elektromanyetik Darbe)</h3>
+      <p>
+        Yıldırım akımının direnç, endüktif ve kapasitif etkileri sonucu oluşan elektromanyetik
+        dalgalar ve aşırı gerilimler bütünüdür. Bu etkilere karşı korunmak için koruyucu
+        önlemler (örneğin, koordineli SPD’ler, metal boru kullanımı, kablo ekranlama) 
+        uygulanmalıdır.
+      </p>
+  
+      <h3>LPL (Yıldırım Koruma Seviyesi)</h3>
+      <p>
+        Yıldırım akımının maksimum ve minimum tasarım değerlerini karşılayacak şekilde 
+        dört farklı seviyede tanımlanmış koruma sınıflarıdır (I, II, III, IV). Her bir seviye, 
+        koruma sisteminde kullanılacak bileşenlerin dayanım ve tasarım kriterlerini belirler.
+      </p>
+  
+      <h3>LPS (Yıldırım Koruma Sistemi)</h3>
+      <p>
+        Yıldırımın yapılara fiziksel hasar vermesini veya iç sistemlere zarar vermesini 
+        engellemek üzere tasarlanmış harici ve dahili koruma önlemlerinin bütünüdür.
+      </p>
+  
+      <h3>Fiziksel Hasar</h3>
+      <p>
+        Yapıya (veya içeriğine) mekanik, termal, kimyasal veya patlayıcı etkilerle 
+        meydana gelen zararı ifade eder.
+      </p>
+  
+      <h3>Canlılara Zarar</h3>
+      <p>
+        Yıldırım çarpması sonucu oluşan dokunma ve adım gerilimleri nedeniyle insanlar 
+        veya hayvanlarda meydana gelebilecek kalıcı yaralanma veya ölüm durumunu ifade eder.
+      </p>
+  
+      <h3>Risk (R)</h3>
+      <p>
+        Korunacak yapının (insanlar ve mallar) toplam değeri ile yıldırım kaynaklı 
+        ortalama yıllık olası kaybın oranını tanımlar.
+      </p>
+  
+      <h3>LPZ (Yıldırım Koruma Bölgesi)</h3>
+      <p>
+        Yıldırım elektromanyetik ortamının tanımlandığı bölgelerdir. LPZ sınırları, mutlaka fiziksel 
+        duvarlar veya tavanlar olmak zorunda değildir; koruma konsepti ve kurulu ekipmanların 
+        tasarımına göre tanımlanabilir.
+      </p>
+  
+      <h3>Manyetik Kalkan</h3>
+      <p>
+        Korumak istenen yapıyı veya bir bölümünü kaplayan metalik, kafes tipi ya da sürekli 
+        bir kaplama kullanılarak elektriksel ve elektronik sistemleri yıldırımın elektromanyetik 
+        etkilerinden korumaya yarar.
+      </p>
+  
+      <h3>Yıldırım Koruyucu Kablo</h3>
+      <p>
+        Yüksek dielektrik dayanımına sahip, metalik kılıfı toprakla sürekli temas eden (veya 
+        iletken plastik kaplama kullanılan) özel tasarımlı kablolardır. Yıldırım akımının 
+        iletken üzerinden yapıya girişini engellemeye yardımcı olur.
+      </p>
+  
+      <h3>Yıldırım Koruyucu Kablo Kanalı</h3>
+      <p>
+        Düşük özdirence sahip beton veya metalik kanal (içinde birbirine bağlanmış donatı çeliği 
+        bulunan) şeklinde tasarlanmış, kabloyu toprakla sürekli temas halinde tutarak 
+        aşırı gerilim riskini azaltan özel kablo kanalıdır.
+      </p>
+  
+    </div>
+    <!-- Sağ alt köşede sayfa numarası -->
+    <div class="footer">Sayfa 6</div>
+  </div>
+  
+  <!-- 9. HUKUKİ YÜKÜMLÜLÜK SAYFASI -->
+<div class="page">
+    <div class="content">
+      <h2>Hukuki Yükümlülük</h2>
+      <p>
+        Yapılan risk analizi, bina veya tesisin sahibi/işleticisi tarafından sağlanan ve/veya
+        saha uzmanı tarafından kabul, değerlendirme veya tanımlama yoluyla elde edilmiş
+        bilgilere dayanmaktadır. Lütfen bu bilgilerin, değerlendirme sonrasında doğrulanması
+        gerektiğini unutmayınız.
+      </p>
+      <p>
+        Bu risk analizi, TS 62305-2 standardına uygun olarak
+        Radsan Lightning Risk Assessment yazılımıyla hesaplanmıştır.
+      </p>
+      <p>
+        Tüm varsayımlar, belgeler, parametreler ve sonuçlar,
+        risk analizi yapan kişi için yasal bağlayıcılık taşımamaktadır.
+      </p>
+      
+      <br><br><br>
+      <p>ANKARA, {{tarih}}</p>
+      <p>_____________________________________<br>
+      Yer, Tarih</p>
+      <br><br><br><br><br>
+      <p>_____________________________________<br>
+      Kaşe, İmza</p>
+    </div>
+    <!-- Sağ alt köşede sayfa numarası -->
+    <div class="footer">Sayfa 7</div>
+  </div>
+  
+  
+  
+  
+</body>
+</html>

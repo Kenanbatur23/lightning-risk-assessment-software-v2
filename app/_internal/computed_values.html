@@ -1,0 +1,312 @@
+{% extends "home.html" %}
+{% block content %}
+  <h2>Koruma Bölgesi Karakteristikleri</h2>
+  
+
+  
+  <!-- 1. Tablo: Risk Bileşenleri -->
+  <h3>Risk Bileşenleri</h3>
+  <table border="1" cellspacing="0" cellpadding="5">
+    <tr>
+      <th>Parameter</th>
+      <th>Value</th>
+    </tr>
+    <tr>
+      <td>R_A</td>
+      <td>{{ R_A }}</td>
+    </tr>
+    <tr>
+      <td>R_B</td>
+      <td>{{ R_B }}</td>
+    </tr>
+    <tr>
+      <td>R_C</td>
+      <td>{{ R_C }}</td>
+    </tr>
+    <tr>
+      <td>R_M</td>
+      <td>{{ R_M }}</td>
+    </tr>
+    <tr>
+      <td>R_U_P</td>
+      <td>{{ R_U_P }}</td>
+    </tr>
+    <tr>
+      <td>R_U_T</td>
+      <td>{{ R_U_T }}</td>
+    </tr>
+    <tr>
+      <td>R_U</td>
+      <td>{{ R_U }}</td>
+    </tr>
+    <tr>
+      <td>R_V_P</td>
+      <td>{{ R_V_P }}</td>
+    </tr>
+    <tr>
+      <td>R_V_T</td>
+      <td>{{ R_V_T }}</td>
+    </tr>
+    <tr>
+      <td>R_V</td>
+      <td>{{ R_V }}</td>
+    </tr>
+    <tr>
+      <td>R_W_P</td>
+      <td>{{ R_W_P }}</td>
+    </tr>
+    <tr>
+      <td>R_W_T</td>
+      <td>{{ R_W_T }}</td>
+    </tr>
+    <tr>
+      <td>R_W</td>
+      <td>{{ R_W }}</td>
+    </tr>
+    <tr>
+      <td>R_Z_P</td>
+      <td>{{ R_Z_P }}</td>
+    </tr>
+    <tr>
+      <td>R_Z_T</td>
+      <td>{{ R_Z_T }}</td>
+    </tr>
+    <tr>
+      <td>R_Z</td>
+      <td>{{ R_Z }}</td>
+    </tr>
+    <tr>
+      <td><strong>R_TOPLAM</strong></td>
+      <td>{{ R_TOPLAM }}</td>
+    </tr>
+  </table>
+  
+
+  <br>
+  <div style="text-align: center;">
+    <button onclick="window.location.href='/download_pdf'" style="padding: 25px 300px; font-size: 20px;">
+      PDF İndir
+    </button>
+  </div>
+
+  <!-- 2. Tablo: Diğer Session Değerleri -->
+  <h3>Ek Parametreler</h3>
+  <table border="1" cellspacing="0" cellpadding="5">
+    <tr>
+      <th>Parameter</th>
+      <th>Value</th>
+    </tr>
+    <tr>
+      <td>N_G</td>
+      <td>{{ N_G }}</td>
+    </tr>
+    <tr>
+      <td>A_D</td>
+      <td>{{ A_D }}</td>
+    </tr>
+    <tr>
+      <td>C_D</td>
+      <td>{{ C_D }}</td>
+    </tr>
+    <tr>
+      <td>P_TA</td>
+      <td>{{ P_TA }}</td>
+    </tr>
+    <tr>
+      <td>P_B</td>
+      <td>{{ P_B }}</td>
+    </tr>
+    <tr>
+      <td>r_t</td>
+      <td>{{ r_t }}</td>
+    </tr>
+    <tr>
+      <td>r_p</td>
+      <td>{{ r_p }}</td>
+    </tr>
+    <tr>
+      <td>h_z</td>
+      <td>{{ h_z }}</td>
+    </tr>
+    <tr>
+      <td>L_F</td>
+      <td>{{ L_F }}</td>
+    </tr>
+    <tr>
+      <td>P_SPD_GÜÇ</td>
+      <td>{{ P_SPD_GÜÇ }}</td>
+    </tr>
+    <tr>
+      <td>P_SPD_TLC</td>
+      <td>{{ P_SPD_TLC }}</td>
+    </tr>
+    <tr>
+      <td>C_LD_GÜÇ</td>
+      <td>{{ C_LD_GÜÇ }}</td>
+    </tr>
+    <tr>
+      <td>C_LD_TLC_cal</td>
+      <td>{{ C_LD_TLC_cal }}</td>
+    </tr>
+    <tr>
+      <td>yapi_tipi</td>
+      <td>{{ yapi_tipi }}</td>
+    </tr>
+    <tr>
+      <td>A_M</td>
+      <td>{{ A_M }}</td>
+    </tr>
+    <tr>
+      <td>KS_4_GÜÇ</td>
+      <td>{{ KS_4_GÜÇ }}</td>
+    </tr>
+    <tr>
+      <td>KS_3_GÜÇ</td>
+      <td>{{ KS_3_GÜÇ }}</td>
+    </tr>
+    <tr>
+      <td>KS_4_TLC</td>
+      <td>{{ KS_4_TLC }}</td>
+    </tr>
+    <tr>
+      <td>KS_3_TLC</td>
+      <td>{{ KS_3_TLC }}</td>
+    </tr>
+    <tr>
+      <td>A_L_GÜÇ</td>
+      <td>{{ A_L_GÜÇ }}</td>
+    </tr>
+    <tr>
+      <td>C_I_GÜÇ</td>
+      <td>{{ C_I_GÜÇ }}</td>
+    </tr>
+    <tr>
+      <td>C_E</td>
+      <td>{{ C_E }}</td>
+    </tr>
+    <tr>
+      <td>C_T_GÜÇ</td>
+      <td>{{ C_T_GÜÇ }}</td>
+    </tr>
+    <tr>
+      <td>P_TU</td>
+      <td>{{ P_TU }}</td>
+    </tr>
+    <tr>
+      <td>A_L_TLC</td>
+      <td>{{ A_L_TLC }}</td>
+    </tr>
+    <tr>
+      <td>C_I_TLC</td>
+      <td>{{ C_I_TLC }}</td>
+    </tr>
+    <tr>
+      <td>C_T_TLC</td>
+      <td>{{ C_T_TLC }}</td>
+    </tr>
+    <tr>
+      <td>P_EB</td>
+      <td>{{ P_EB }}</td>
+    </tr>
+    <tr>
+      <td>A_I_GÜÇ</td>
+      <td>{{ A_I_GÜÇ }}</td>
+    </tr>
+    <tr>
+      <td>P_LI_GÜÇ</td>
+      <td>{{ P_LI_GÜÇ }}</td>
+    </tr>
+    <tr>
+      <td>P_LI_TLC</td>
+      <td>{{ P_LI_TLC }}</td>
+    </tr>
+    <tr>
+      <td>C_LI_GÜÇ</td>
+      <td>{{ C_LI_GÜÇ }}</td>
+    </tr>
+    <tr>
+      <td>C_LI_TLC</td>
+      <td>{{ C_LI_TLC }}</td>
+    </tr>
+    <tr>
+      <td>A_I_TLC</td>
+      <td>{{ A_I_TLC }}</td>
+    </tr>
+    <tr>
+      <td>N_D</td>
+      <td>{{ N_D }}</td>
+    </tr>
+    <tr>
+      <td>N_M</td>
+      <td>{{ N_M }}</td>
+    </tr>
+    <tr>
+      <td>N_L_P</td>
+      <td>{{ N_L_P }}</td>
+    </tr>
+    <tr>
+      <td>N_L_T</td>
+      <td>{{ N_L_T }}</td>
+    </tr>
+    <tr>
+      <td>N_I_P</td>
+      <td>{{ N_I_P }}</td>
+    </tr>
+    <tr>
+      <td>N_I_T</td>
+      <td>{{ N_I_T }}</td>
+    </tr>
+    <tr>
+      <td>L_A</td>
+      <td>{{ L_A }}</td>
+    </tr>
+    <tr>
+      <td>r_f</td>
+      <td>{{ r_f }}</td>
+    </tr>
+    <tr>
+      <td>L_B</td>
+      <td>{{ L_B }}</td>
+    </tr>
+    <tr>
+      <td>L_U</td>
+      <td>{{ L_U }}</td>
+    </tr>
+    <tr>
+      <td>L_O</td>
+      <td>{{ L_O }}</td>
+    </tr>
+    <tr>
+      <td>P_C</td>
+      <td>{{ P_C }}</td>
+    </tr>
+    <tr>
+      <td>P_M</td>
+      <td>{{ P_M }}</td>
+    </tr>
+    <tr>
+      <td>P_M_P</td>
+      <td>{{ P_M_P }}</td>
+    </tr>  
+    <tr>
+      <td>P_M_T</td>
+      <td>{{ P_M_T }}</td>
+    </tr>
+    <tr>
+      <td>KS_1_GÜÇ</td>
+      <td>{{ KS_1_GÜÇ }}</td>
+    </tr>
+    <tr>
+      <td>KS_2_GÜÇ</td>
+      <td>{{ KS_2_GÜÇ }}</td>
+    </tr>
+    <tr>
+      <td>P_MS_P</td>
+      <td>{{ P_MS_P }}</td>
+    </tr>
+    <tr>
+      <td>P_MS_T</td>
+      <td>{{ P_MS_T }}</td>
+    </tr>
+  </table>
+{% endblock %}
