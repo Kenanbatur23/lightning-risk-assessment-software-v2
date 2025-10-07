@@ -1,11 +1,49 @@
 from flask import Flask, render_template, request, session, redirect, url_for,make_response
 import pdfkit
 import base64
-#wkhtmltopdf indirilmesi gerekliaaa
+#wkhtmltopdf indirilmesi gerekliaaaa
+import os
+import sys
+import shutil
+from pathlib import Path
 
 import math
 
-app = Flask(__name__)
+
+# --- Helpers for PyInstaller / resource access ---
+
+def resource_path(relative_path: str) -> str:
+    """Return absolute path to resource, works for dev and for PyInstaller bundle."""
+    base_path = getattr(sys, "_MEIPASS", Path(__file__).parent)
+    return str(Path(base_path) / relative_path)
+
+
+def find_wkhtmltopdf() -> str | None:
+    """Try to locate wkhtmltopdf in env, PATH, or bundled bin directory."""
+    # 1) Environment variable override
+    env_path = os.environ.get("WKHTMLTOPDF_PATH")
+    if env_path and Path(env_path).exists():
+        return env_path
+    # 2) System PATH
+    which = shutil.which("wkhtmltopdf")
+    if which:
+        return which
+    # 3) Bundled with the app under bin/
+    candidates = [
+        resource_path("bin/wkhtmltopdf.exe"),  # Windows
+        resource_path("bin/wkhtmltopdf"),      # Linux/macOS
+    ]
+    for c in candidates:
+        if Path(c).exists():
+            return c
+    return None
+
+
+app = Flask(
+    __name__,
+    template_folder=resource_path("templates"),
+    static_folder=resource_path("static"),
+)
 app.secret_key = "cok_gizli_anahtar"
 
 # ----------------R_A---------------------------#
@@ -167,8 +205,9 @@ def KS_3_cal(selected_option: str) -> float:
     return mapping.get(selected_option, 0.0)
 
 def A_L_cal(L_hat):
-    if L_hat== "-":
-        return 1000*40
+    # Bilinmiyor ("-") seçildiğinde bu sayfanın katkısı sıfır olmalı
+    if L_hat == "-":
+        return 0
     A_L = 40 * L_hat
     return A_L
 
@@ -229,9 +268,9 @@ def P_TU_cal(selected_options) -> float:
 
 
 def A_I_cal(L_hat):
+    # Bilinmiyor ("-") seçildiğinde bu sayfanın katkısı sıfır olmalı
     if L_hat == "-":
-        return 4000 * 1000
-
+        return 0
     A_I = 4000 * L_hat
     return A_I
 
@@ -350,10 +389,11 @@ def power_line():
     dış_hat_tipi_güç = session.get("dış_hat_tipi_güç", "")
 
     SPD_güç = session.get("SPD_güç", "")
-    iç_hat_GÜÇ = session.get("iç_hat_GÜÇ","")
-    giriş_GÜÇ = session.get("giriş_GÜÇ","")
-    
+    iç_hat_GÜÇ = session.get("iç_hat_GÜÇ", "")
+    giriş_GÜÇ = session.get("giriş_GÜÇ", "")
+
     if request.method == "POST":
+        unknown_power = False
         güç_hattı = request.form["güç_hattı"]
         if güç_hattı == "Yok":
             hat_uzunluk_güç = "-"
@@ -366,6 +406,7 @@ def power_line():
             giriş_GÜÇ = "-"
         else:
             if "hat_uzunluk_bilinmiyor" in request.form:
+                unknown_power = True
                 hat_uzunluk_güç = "-"
             else:
                 hat_uzunluk_güç = float(request.form["hat_uzunluk_güç"])
@@ -376,7 +417,7 @@ def power_line():
             SPD_güç = request.form["SPD_güç"]
             iç_hat_GÜÇ = request.form["iç_hat_GÜÇ"]
             giriş_GÜÇ = request.form["giriş_GÜÇ"]
-        
+
         # Form değerlerini session'a kaydetme
         session["güç_hattı"] = güç_hattı
         session["hat_uzunluk_güç"] = hat_uzunluk_güç
@@ -388,31 +429,29 @@ def power_line():
         session["iç_hat_GÜÇ"] = iç_hat_GÜÇ
         session["giriş_GÜÇ"] = giriş_GÜÇ
 
-        # "Yok" değeri için hesaplama sonuçlarını 0 yap, aksi halde hesaplama fonksiyonlarını kullan
-        if güç_hattı == "Yok":
-            session["A_L_GÜÇ"] = 0
-            session["C_I_GÜÇ"] = 0
-            session["C_T_GÜÇ"] = 0
-            session["P_EB"] = 0
-            session["A_I_GÜÇ"] = 0
-            session["P_LI_GÜÇ"] = 0
-            session["C_LI_GÜÇ"] = 0
-            session["KS_3_GÜÇ"] = 0
-            session["KS_4_GÜÇ"] = 0
+        # "Yok" veya "Bilinmiyor" (unknown) seçildiğinde bu sayfanın tüm hesapları sıfır olmalı
+        if güç_hattı == "Yok" or ("hat_uzunluk_bilinmiyor" in request.form):
+            session["A_L_GÜÇ"] = 0.0
+            session["C_I_GÜÇ"] = 0.0
+            session["C_T_GÜÇ"] = 0.0
+            session["P_SPD_GÜÇ"] = 0.0
+            session["A_I_GÜÇ"] = 0.0
+            session["P_LI_GÜÇ"] = 0.0
+            session["C_LI_GÜÇ"] = 0.0
+            session["KS_3_GÜÇ"] = 0.0
+            session["KS_4_GÜÇ"] = 0.0
         else:
             session["A_L_GÜÇ"] = A_L_cal(hat_uzunluk_güç)
             session["C_I_GÜÇ"] = C_I_cal(tesisat_faktörü_güç)
             session["C_T_GÜÇ"] = C_T_cal(güç_hattı_tipi)
             session["P_SPD_GÜÇ"] = P_SPD_cal(SPD_güç)
             session["A_I_GÜÇ"] = A_I_cal(hat_uzunluk_güç)
-
             session["P_LI_GÜÇ"] = P_LI_GÜÇ_cal(dayanım_gerilimi_güç)
             session["C_LI_GÜÇ"] = C_LI_GÜÇ_cal(dış_hat_tipi_güç)
             session["KS_3_GÜÇ"] = KS_3_cal(iç_hat_GÜÇ)
             session["KS_4_GÜÇ"] = KS_4_cal(dayanım_gerilimi_güç)
-        
         return redirect(url_for("TLC"))
-    
+
     return render_template("power_line.html",
                            güç_hattı=güç_hattı,
                            hat_uzunluk_güç=hat_uzunluk_güç,
@@ -421,8 +460,8 @@ def power_line():
                            dayanım_gerilimi_güç=dayanım_gerilimi_güç,
                            dış_hat_tipi_güç=dış_hat_tipi_güç,
                            SPD_güç=SPD_güç,
-                           iç_hat_GÜÇ =iç_hat_GÜÇ,
-                           giriş_GÜÇ = giriş_GÜÇ)
+                           iç_hat_GÜÇ= iç_hat_GÜÇ,
+                           giriş_GÜÇ= giriş_GÜÇ)
 
 @app.route("/TLC", methods=["GET", "POST"])
 def TLC():
@@ -432,8 +471,8 @@ def TLC():
     dış_hat_tipi_TLC = session.get("dış_hat_tipi_TLC", "")
     TLC_hattı = session.get("TLC_hattı", "")
     SPD_TLC = session.get("SPD_TLC", "")
-    iç_hat_TLC = session.get("iç_hat_TLC","")
-    giriş_TLC = session.get("giriş_TLC","")
+    iç_hat_TLC = session.get("iç_hat_TLC", "")
+    giriş_TLC = session.get("giriş_TLC", "")
 
     if request.method == "POST":
         TLC_hattı = request.form["TLC_hattı"]
@@ -455,7 +494,7 @@ def TLC():
             dış_hat_tipi_TLC = request.form["dış_hat_tipi_TLC"]
             SPD_TLC = request.form["SPD_TLC"]
             iç_hat_TLC = request.form["iç_hat_TLC"]
-            giriş_TLC =  request.form["giriş_TLC"]
+            giriş_TLC = request.form["giriş_TLC"]
 
         # Form değerlerini session'a kaydetme
         session["TLC_hattı"] = TLC_hattı
@@ -467,17 +506,17 @@ def TLC():
         session["iç_hat_TLC"] = iç_hat_TLC
         session["giriş_TLC"] = giriş_TLC
 
-        # "Yok" değeri için hesaplama sonuçlarını 0 yap, aksi halde hesaplama fonksiyonlarını kullan
-        if TLC_hattı == "Yok":
-            session["A_L_TLC"] = 0
-            session["C_I_TLC"] = 0
-            session["C_T_TLC"] = 0
-            session["P_EB"] = 0
-            session["A_I_TLC"] = 0
-            session["P_LI_TLC"] = 0
-            session["C_LI_TLC"] = 0
-            session["KS_3_TLC"] = 0
-            session["KS_4_TLC"] = 0
+        # "Yok" veya "Bilinmiyor" (unknown) seçildiğinde bu sayfanın tüm hesapları sıfır olmalı
+        if TLC_hattı == "Yok" or ("hat_uzunluk_TLC_bilinmiyor" in request.form):
+            session["A_L_TLC"] = 0.0
+            session["C_I_TLC"] = 0.0
+            session["C_T_TLC"] = 0.0
+            session["P_SPD_TLC"] = 0.0
+            session["A_I_TLC"] = 0.0
+            session["P_LI_TLC"] = 0.0
+            session["C_LI_TLC"] = 0.0
+            session["KS_3_TLC"] = 0.0
+            session["KS_4_TLC"] = 0.0
         else:
             session["A_L_TLC"] = A_L_cal(hat_uzunluk_TLC)
             session["C_I_TLC"] = C_I_cal(tesisat_faktörü_TLC)
@@ -490,7 +529,7 @@ def TLC():
             session["KS_4_TLC"] = KS_4_cal(dayanım_gerilimi_TLC)
 
         return redirect(url_for("bölge_konum"))
-    
+
     return render_template("TLC.html",
                            hat_uzunluk_TLC=hat_uzunluk_TLC,
                            tesisat_faktörü_TLC=tesisat_faktörü_TLC,
@@ -498,8 +537,8 @@ def TLC():
                            dış_hat_tipi_TLC=dış_hat_tipi_TLC,
                            TLC_hattı=TLC_hattı,
                            SPD_TLC=SPD_TLC,
-                           iç_hat_TLC = iç_hat_TLC,
-                           giriş_TLC = giriş_TLC)
+                           iç_hat_TLC= iç_hat_TLC,
+                           giriş_TLC= giriş_TLC)
 
 
 @app.route("/bölge_konum", methods=["GET", "POST"])
@@ -958,10 +997,11 @@ def download_pdf():
     else:
         sonuç = "R1 < RT olduğu görülmektedir. Sonuç olarak KORUMA GEREKLİ DEĞİLDİR."
 
-    # Logo dosyasını base64 formatına çeviriyoruz.
-    with open("static/logo.png", "rb") as image_file:
-        logo_base64 = base64.b64encode(image_file.read()).decode('utf-8')
-    
+    # Logo dosyasını base64 formatına çeviriyoruz (PyInstaller uyumlu).
+    logo_path = resource_path("static/logo.png")
+    with open(logo_path, "rb") as image_file:
+        logo_base64 = base64.b64encode(image_file.read()).decode("utf-8")
+
     rendered = render_template(
         "pdf_template.html",
         N_G=N_G,
@@ -984,15 +1024,22 @@ def download_pdf():
         logo_base64=logo_base64  # Template'e base64 string gönderiliyor.
     )
     
-    path_wkhtmltopdf = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
-    config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf)
-    
-    pdf = pdfkit.from_string(rendered, False, configuration=config)
-    
+    # wkhtmltopdf yolunu otomatik bul (env/PATH/bundled) ve pdfkit'i konfigüre et
+    wkhtml_path = find_wkhtmltopdf()
+    try:
+        if wkhtml_path:
+            config = pdfkit.configuration(wkhtmltopdf=wkhtml_path)
+            pdf = pdfkit.from_string(rendered, False, configuration=config)
+        else:
+            # Son çare: sistemde default konfigürasyonla dene (bazı ortamlar için yeterli olabilir)
+            pdf = pdfkit.from_string(rendered, False)
+    except Exception as e:
+        # Kullanıcı dostu hata
+        return f"PDF üretimi sırasında hata oluştu: {e}. Lütfen wkhtmltopdf kurulu olduğundan emin olun veya uygulama klasöründeki bin/ altına ekleyin.", 500
+
     response = make_response(pdf)
     response.headers["Content-Type"] = "application/pdf"
     response.headers["Content-Disposition"] = f"attachment; filename={musteri}-{obje} Risk Analiz Raporu.pdf"
-    
     return response
 
 
@@ -1000,7 +1047,8 @@ def download_pdf():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    # EXE'de iki kez çalışmayı önlemek için reloader kapalı
+    app.run(debug=False, use_reloader=False)
 
 
 
