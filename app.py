@@ -205,9 +205,9 @@ def KS_3_cal(selected_option: str) -> float:
     return mapping.get(selected_option, 0.0)
 
 def A_L_cal(L_hat):
-    # Bilinmiyor ("-") seçildiğinde bu sayfanın katkısı sıfır olmalı
+    # Bilinmiyor ("-") seçildiğinde önceki varsayılan değeri kullan
     if L_hat == "-":
-        return 0
+        return 1000*40
     A_L = 40 * L_hat
     return A_L
 
@@ -268,9 +268,9 @@ def P_TU_cal(selected_options) -> float:
 
 
 def A_I_cal(L_hat):
-    # Bilinmiyor ("-") seçildiğinde bu sayfanın katkısı sıfır olmalı
+    # Bilinmiyor ("-") seçildiğinde önceki varsayılan değeri kullan
     if L_hat == "-":
-        return 0
+        return 4000 * 1000
     A_I = 4000 * L_hat
     return A_I
 
@@ -396,7 +396,7 @@ def power_line():
         unknown_power = False
         güç_hattı = request.form["güç_hattı"]
         if güç_hattı == "Yok":
-            hat_uzunluk_güç = "-"
+            hat_uzunluk_güç = 0
             tesisat_faktörü_güç = "-"
             güç_hattı_tipi = "-"
             dayanım_gerilimi_güç = "-"
@@ -429,8 +429,8 @@ def power_line():
         session["iç_hat_GÜÇ"] = iç_hat_GÜÇ
         session["giriş_GÜÇ"] = giriş_GÜÇ
 
-        # "Yok" veya "Bilinmiyor" (unknown) seçildiğinde bu sayfanın tüm hesapları sıfır olmalı
-        if güç_hattı == "Yok" or ("hat_uzunluk_bilinmiyor" in request.form):
+        # Sadece "Yok" seçildiğinde sayfa 0 olmalı; "Bilinmiyor" durumunda varsayılanlar kullanılacak
+        if güç_hattı == "Yok":
             session["A_L_GÜÇ"] = 0.0
             session["C_I_GÜÇ"] = 0.0
             session["C_T_GÜÇ"] = 0.0
@@ -477,7 +477,7 @@ def TLC():
     if request.method == "POST":
         TLC_hattı = request.form["TLC_hattı"]
         if TLC_hattı == "Yok":
-            hat_uzunluk_TLC = "-"
+            hat_uzunluk_TLC = 0
             tesisat_faktörü_TLC = "-"
             dayanım_gerilimi_TLC = "-"
             dış_hat_tipi_TLC = "-"
@@ -506,8 +506,8 @@ def TLC():
         session["iç_hat_TLC"] = iç_hat_TLC
         session["giriş_TLC"] = giriş_TLC
 
-        # "Yok" veya "Bilinmiyor" (unknown) seçildiğinde bu sayfanın tüm hesapları sıfır olmalı
-        if TLC_hattı == "Yok" or ("hat_uzunluk_TLC_bilinmiyor" in request.form):
+        # Sadece "Yok" seçildiğinde sayfa 0 olmalı; "Bilinmiyor" durumunda varsayılanlar kullanılacak
+        if TLC_hattı == "Yok":
             session["A_L_TLC"] = 0.0
             session["C_I_TLC"] = 0.0
             session["C_T_TLC"] = 0.0
@@ -876,6 +876,10 @@ def computed_values():
 
     R_Z = R_Z_P+R_Z_T
 
+    # --- TOPLAM RİSK ---
+    R_TOPLAM = R_A + R_B + R_C + R_M + R_U + R_V + R_W + R_Z
+    session["R_TOPLAM"] = R_TOPLAM
+
 
 
     session["R_A"] = R_A
@@ -899,16 +903,18 @@ def computed_values():
         R_M=R_M,
         R_U_P=R_U_P,
         R_U_T=R_U_T,
-        R_U = R_U,
+        R_U=R_U,
         R_V_P=R_V_P,
         R_V_T=R_V_T,
-        R_V = R_V,
+        R_V=R_V,
         R_W_P=R_W_P,
         R_W_T=R_W_T,
-        R_W = R_W,
+        R_W=R_W,
         R_Z_P=R_Z_P,
         R_Z_T=R_Z_T,
-        R_Z = R_Z,
+        R_Z=R_Z,
+        R_TOPLAM=R_TOPLAM,
+        R_toplam=R_TOPLAM,
         # Eklenen diğer değişkenler
         N_G=N_G,
         A_D=A_D,
@@ -944,26 +950,26 @@ def computed_values():
         C_LI_GÜÇ=C_LI_GÜÇ,
         C_LI_TLC=C_LI_TLC,
         A_I_TLC=A_I_TLC,
-        N_D = N_D,
-        N_M = N_M,
-        N_L_P =N_L_P,
-        N_L_T = N_L_T,
-        N_I_P = N_I_P,
-        N_I_T = N_I_T,
-        L_A = L_A,
-        r_f = r_f,
-        L_B = L_B,
-        L_US = L_U,
-        P_C =P_C,
-        L_O = L_O,
-        P_M = P_M,
-        P_M_P = P_M_P,
+        N_D=N_D,
+        N_M=N_M,
+        N_L_P=N_L_P,
+        N_L_T=N_L_T,
+        N_I_P=N_I_P,
+        N_I_T=N_I_T,
+        L_A=L_A,
+        r_f=r_f,
+        L_B=L_B,
+        L_US=L_U,
+        P_C=P_C,
+        L_O=L_O,
+        P_M=P_M,
+        P_M_P=P_M_P,
         P_M_T=P_M_T,
-        KS_1_GÜÇ =KS_1_GÜÇ,
-        KS_2_GÜÇ =KS_2_GÜÇ,
-        P_MS_P = P_MS_P,
-        P_MS_T =P_MS_T,
-        uzman_isim = uzman_isim
+        KS_1_GÜÇ=KS_1_GÜÇ,
+        KS_2_GÜÇ=KS_2_GÜÇ,
+        P_MS_P=P_MS_P,
+        P_MS_T=P_MS_T,
+        uzman_isim=uzman_isim
     )
 
 
@@ -985,6 +991,8 @@ def download_pdf():
     R_B = session.get("R_B", "") / 1e-5
     R_C = session.get("R_C", "") / 1e-5
     R_M = session.get("R_M", "") / 1e-5
+
+    
     R_U = session.get("R_U", "") / 1e-5
     R_V = session.get("R_V", "") / 1e-5
     R_W = session.get("R_W", "") / 1e-5
