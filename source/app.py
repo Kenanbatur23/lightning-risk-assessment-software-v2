@@ -296,6 +296,18 @@ def C_LI_TLC_cal(selected_option: str) -> float:
 
         
 
+
+# --- Display formatting helpers ---
+def fmt_r(x, sig=4):
+    """
+    Format risk values compactly with limited decimals/significant digits for display in templates.
+    Default: 4 significant figures (e.g., 0.01234 -> '0.01234', 1.234567e-5 -> '1.235e-05').
+    """
+    try:
+        return format(float(x), f".{sig}g")
+    except Exception:
+        return x
+
 # ---------------- Routes ---------------- #
 
 @app.route("/")
@@ -896,25 +908,25 @@ def computed_values():
     # Hesaplama sonuçlarını template'e gönderiyoruz:
     return render_template(
         "computed_values.html",
-        # Hesapladığınız risk bileşenleri
-        R_A=R_A,
-        R_B=R_B,
-        R_C=R_C,
-        R_M=R_M,
-        R_U_P=R_U_P,
-        R_U_T=R_U_T,
-        R_U=R_U,
-        R_V_P=R_V_P,
-        R_V_T=R_V_T,
-        R_V=R_V,
-        R_W_P=R_W_P,
-        R_W_T=R_W_T,
-        R_W=R_W,
-        R_Z_P=R_Z_P,
-        R_Z_T=R_Z_T,
-        R_Z=R_Z,
-        R_TOPLAM=R_TOPLAM,
-        R_toplam=R_TOPLAM,
+        # Hesapladığınız risk bileşenleri (formatlanmış olarak)
+        R_A=fmt_r(R_A),
+        R_B=fmt_r(R_B),
+        R_C=fmt_r(R_C),
+        R_M=fmt_r(R_M),
+        R_U_P=fmt_r(R_U_P),
+        R_U_T=fmt_r(R_U_T),
+        R_U=fmt_r(R_U),
+        R_V_P=fmt_r(R_V_P),
+        R_V_T=fmt_r(R_V_T),
+        R_V=fmt_r(R_V),
+        R_W_P=fmt_r(R_W_P),
+        R_W_T=fmt_r(R_W_T),
+        R_W=fmt_r(R_W),
+        R_Z_P=fmt_r(R_Z_P),
+        R_Z_T=fmt_r(R_Z_T),
+        R_Z=fmt_r(R_Z),
+        R_TOPLAM=fmt_r(R_TOPLAM),
+        R_toplam=fmt_r(R_TOPLAM),
         # Eklenen diğer değişkenler
         N_G=N_G,
         A_D=A_D,
