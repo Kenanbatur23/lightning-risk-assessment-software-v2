@@ -86,5 +86,46 @@
         
     <!-- Formu göndermek için bir submit butonu ekleyebilirsiniz -->
   <!-- Power Line sayfasına yönlendirme yapan buton -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Yapı önlem checkboxları
+      const yapiKorunma = document.getElementById('yapi_option1');
+      const yapiCheckboxes = Array.from(document.querySelectorAll('input[name="elektirik_önlem_yapı"]')).filter(cb => cb.id !== 'yapi_option1');
+
+      yapiKorunma.addEventListener('change', function() {
+        if (this.checked) {
+          yapiCheckboxes.forEach(cb => {
+            cb.checked = false;
+            cb.disabled = true;
+          });
+        } else {
+          yapiCheckboxes.forEach(cb => {
+            cb.disabled = false;
+          });
+        }
+      });
+
+      // Hatt önlem checkboxları
+      const hatKorunma = document.getElementById('hat_option1');
+      const hatCheckboxes = Array.from(document.querySelectorAll('input[name="elektirik_önlem_hat"]')).filter(cb => cb.id !== 'hat_option1');
+
+      hatKorunma.addEventListener('change', function() {
+        if (this.checked) {
+          hatCheckboxes.forEach(cb => {
+            cb.checked = false;
+            cb.disabled = true;
+          });
+        } else {
+          hatCheckboxes.forEach(cb => {
+            cb.disabled = false;
+          });
+        }
+      });
+
+      // On page load, trigger change to set initial states if needed
+      yapiKorunma.dispatchEvent(new Event('change'));
+      hatKorunma.dispatchEvent(new Event('change'));
+    });
+  </script>
   </form>
 {% endblock %}

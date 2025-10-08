@@ -224,45 +224,45 @@
         <tbody>
           <tr>
             <td>RA</td>
-            <td>{{R_A}}</td>
+            <td>{{ '%.4g'|format(R_A|float) }}</td>
           </tr>
           <tr>
             <td>RB</td>
-            <td>{{R_B}}</td>
+            <td>{{ '%.4g'|format(R_B|float) }}</td>
           </tr>
           <tr>
             <td>RC</td>
-            <td>{{R_C}}</td>
+            <td>{{ '%.4g'|format(R_C|float) }}</td>
           </tr>
           <tr>
             <td>RM</td>
-            <td>{{R_M}}</td>
+            <td>{{ '%.4g'|format(R_M|float) }}</td>
           </tr>
           <tr>
             <td>RU</td>
-            <td>{{R_U}}</td>
+            <td>{{ '%.4g'|format(R_U|float) }}</td>
           </tr>
           <tr>
             <td>RV</td>
-            <td>{{R_V}}</td>
+            <td>{{ '%.4g'|format(R_V|float) }}</td>
           </tr>
           <tr>
             <td>RW</td>
-            <td>{{R_W}}</td>
+            <td>{{ '%.4g'|format(R_W|float) }}</td>
           </tr>
           <tr>
             <td>RZ</td>
-            <td>{{R_Z}}</td>
+            <td>{{ '%.4g'|format(R_Z|float) }}</td>
           </tr>
           <tr style="font-weight: bold;">
             <td>Toplam R1</td>
-            <td>{{R_TOPLAM}}</td>
+            <td>{{ '%.4g'|format(R_TOPLAM|float) }}</td>
           </tr>
         </tbody>
       </table>
   
       <p style="margin-top: 1px;">
-        Hesaplanan R1 = {{R_TOPLAM}}E-5 ve tanımlı R<sub>T</sub> = 1,00E-05 değerleri dikkate alındığında,
+        Hesaplanan R1 = {{ '%.4g'|format(R_TOPLAM|float) }}E-5 ve tanımlı R<sub>T</sub> = 1,00E-05 değerleri dikkate alındığında,
         {{sonuç}}
       </p>
       <!-- Uzman Yorumu Kutusu -->
